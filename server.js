@@ -1,4 +1,3 @@
-import { error } from 'console';
 import Fastify from 'fastify'
 import pkg from 'pg'
 
@@ -24,12 +23,34 @@ server.get('/usuarios', async (req, reply) => {
 })
 server.post('/usuarios', async (req, reply) => {
     const { nome, senha, email, telefone } = req.body;
+
     try {
         const resultado =
             await pool.query('INSERT INTO USUARIOS (nome, senha, email, telefone) VALUES ($1, $2, $3, $4) RETURNING *', [nome, senha, email, telefone])
         reply.status(200).send(resultado.rows[0])
     } catch (e) {
         reply.status(500).send({ error: e.message })
+    }
+})
+server.put('/usuarios/:id', async (req, reply) => {
+    const { nome, senha, email, telefone } = req.body;
+    const id = req.params.id;
+
+    try {
+        const resultado = await pool.query('UPDATE USUARIOS SET nome=$1, senha=$2, email=$3, telefone=$4 WHERE id=$5 RETURNING *', [nome, senha, email, telefone, id])
+        reply.status(200).send(resultado.rows)
+    } catch (e) {
+        reply.status(500).send({ error: e.message })
+    }
+})
+
+server.delete('/usuarios/:id', async (req, reply)=>{
+    const id = req.params.id
+    try {
+        await pool.query('DELETE FROM USUARIOS WHERE id=$1',[id])
+        reply.send({ massage: 'USUARIO FOI JOGAR NO VASCO'})
+    } catch (feia) {
+        reply.status(500).send({ error: feia.massage})        
     }
 })
 server.post('/categoria', async (req, reply) => {

@@ -8,10 +8,10 @@ POST http://localhost:3000/usuarios
 Content-Type: application/json
 
 {
-    "nome": "João do Star Wars",
-    "senha": "123",
-    "email": "joao@gmail.com",
-    "telefone": "(48) 9 9999-9999"
+    "nome": "VITOR SANTOS",
+    "senha": "132",
+    "email": "VITOR@gmail.com",
+    "telefone": "(48) 9 9349-9999"
 }
 
 ###
@@ -22,3 +22,18 @@ Content-Type: application/json
 {
     "nome":"salgado"
 }
+###
+
+PUT http://localhost:3000/usuarios/1
+Content-Type: application/json
+
+{
+    "nome": "VITO3R SANTOS",
+    "senha": "1332",
+    "email": "VITO4R@gmail.com",
+    "telefone": "(48) 9 9346-9999"
+}
+
+###
+
+DELETE http://localhost:3000/usuarios/1
