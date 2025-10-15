@@ -16,14 +16,6 @@ Content-Type: application/json
 
 ###
 
-POST http://localhost:3000/categoria
-Content-Type: application/json
-
-{
-    "nome":"salgado"
-}
-###
-
 PUT http://localhost:3000/usuarios/1
 Content-Type: application/json
 
@@ -37,3 +29,29 @@ Content-Type: application/json
 ###
 
 DELETE http://localhost:3000/usuarios/1
+
+###
+
+GET http://localhost:3000/categorias
+
+###
+
+POST http://localhost:3000/categorias
+Content-Type: application/json
+
+{
+    "nome":"DOCE"
+}
+
+###
+
+PUT http://localhost:3000/categorias/1
+Content-Type: application/json
+
+{
+    "nome": "SALGADO"
+}
+
+###
+
+DELETE http://localhost:3000/categorias/1
