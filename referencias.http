@@ -4,15 +4,27 @@ GET http://localhost:3000/usuarios
 
 ###
 
+GET http://localhost:3000/usuarios?page=1&limit=10
+
+###
+
+GET http://localhost:3000/usuarios?page=2&limit=10
+
+###
+
+GET http://localhost:3000/usuarios?page=3&limit=10
+
+###
+
 POST http://localhost:3000/usuarios
 Content-Type: application/json
 
-{
-    "nome": "VITOR SANTOS",
-    "senha": "132",
-    "email": "VITOR@gmail.com",
-    "telefone": "(48) 9 9349-9999"
-}
+ {
+    "nome": "Thanos",
+    "senha": "InfinityGauntlet6",
+    "email": "thanos@example.com",
+    "telefone": "(27) 9 9556-7788"
+  }
 
 ###
 
@@ -40,7 +52,7 @@ POST http://localhost:3000/categorias
 Content-Type: application/json
 
 {
-    "nome":"DOCE"
+    "nome":"doce"
 }
 
 ###
@@ -55,3 +67,27 @@ Content-Type: application/json
 ###
 
 DELETE http://localhost:3000/categorias/1
+
+###
+
+GET http://localhost:3000/receitas?page=1&limit=10
+
+###
+
+GET http://localhost:3000/receitas?page=2&limit=5
+
+###
+
+POST http://localhost:3000/receitas
+Content-Type: application/json
+
+  {
+    "nome": "LASANHA DE LÁGRIMAS FELIZES",
+    "modo_preparo": "EMPILHE CAMADAS DE LÁGRIMAS FELIZES E MASSA DE CORAGEM, ASSE ATÉ O SORRISO SURGIR.",
+    "ingredientes": "LÁGRIMAS FELIZES, MASSA, CORAGEM, MOLHO DE AMOR",
+    "tempo_preparo_minutos": "60",
+    "porcoes": "6",
+    "usuario_id": "2",
+    "categoria_id": "1"
+
+  }

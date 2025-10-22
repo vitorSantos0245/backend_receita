@@ -14,9 +14,20 @@ const pool = new Pool({
 const server = Fastify();
 
 server.get('/usuarios', async (req, reply) => {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const offset = (page - 1) * limit;
+
+    const allowedOrder = ['id', 'nome', 'email', 'telefone', 'ativo', 'data_criacao']
+    const sort = allowedOrder.includes(req.query.sort) ? req.query.sort: 'id'
+    const order = req.query.order === 'desc' ? 'DESC' : 'ASC';
+
     try {
-        const resultado = await pool.query('SELECT * FROM USUARIOS')
-        reply.status(200).send(resultado.rows)
+        const resultado = await pool.query(`SELECT * FROM USUARIOS ORDER BY ${sort} ${order} LIMIT ${limit} OFFSET ${offset}`)
+        const count = await pool.query("SELECT COUNT(*) FROM USUARIOS")
+        reply.status(200).send({data: resultado.rows, count: parseInt(count.rows[0].count) })
+
+
     } catch (err) {
         reply.status(500).send({ error: err.message })
     }
@@ -56,16 +67,18 @@ server.delete('/usuarios/:id', async (req, reply)=>{
 server.get('/categorias', async (req, reply) => {
     try {
         const resultado = await pool.query('SELECT * FROM CATEGORIAS')
-        reply.status(200).send(resultado.rows)
+
+        const count = await pool.query("SELECT COUNT(*) FROM CATEGORIAS")
+        reply.status(200).send({data: resultado.rows, count: parseInt(count.rows[0].count) })
     } catch (err) {
         reply.status(500).send({ error: err.message })
     }
 })
-server.post('/categoria', async (req, reply) => {
+server.post('/categorias', async (req, reply) => {
     const { nome } = req.body;
     try {
         const resultado =
-            await pool.query('INSERT INTO CATEGORIAS (nome) VALUES ($1) RETURNING *', [nome])
+            await pool.query('INSERT INTO CATEGORIAS (NOME) VALUES ($1) RETURNING *', [nome])
         reply.status(200).send(resultado.rows)
     } catch (e) {
         reply.status(500).send({ error: e.message })
@@ -89,6 +102,37 @@ server.delete('/categorias/:id', async (req, reply)=>{
         reply.send({ massage: 'categoria FOI JOGAR NO VASCO'})
     } catch (feia) {
         reply.status(500).send({ error: feia.massage})        
+    }
+})
+server.get('/receitas', async(req, reply)=>{
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const offset = (page - 1) * limit;
+
+    const allowedOrder = ['id', 'nome']
+    const sort = allowedOrder.includes(req.query.sort) ? req.query.sort: 'id'
+    const order = req.query.order === 'desc' ? 'DESC' : 'ASC';
+
+    try {
+        const resultado = await pool.query(`SELECT * FROM RECEITAS ORDER BY ${sort} ${order}
+            LIMIT ${limit} OFFSET ${offset}`)
+
+            const count = await pool.query("SELECT COUNT(*) FROM RECEITAS")
+            reply.send({data: resultado.rows, count: parseInt(count.rows[0].count) })
+    } catch (err) {
+        reply.status(500).send({ error: err.message})    
+    }
+})
+server.post('/receitas', async (req, reply) => {
+    const { nome, modo_preparo, ingredientes, tempo_preparo_minutos, porcoes, usuario_id, categoria_id } = req.body;
+
+    try {
+        const resultado =
+            await pool.query('INSERT INTO RECEITAS ( nome, modo_preparo, ingredientes, tempo_preparo_minutos, porcoes, usuario_id, categoria_id ) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
+                 [ nome, modo_preparo, ingredientes, tempo_preparo_minutos, porcoes, usuario_id, categoria_id ])
+        reply.status(200).send(resultado.rows[0])
+    } catch (e) {
+        reply.status(500).send({ error: e.message })
     }
 })
 
